@@ -1,5 +1,5 @@
 // The title of the game to be displayed on the title screen
-title = "CHARGE RUSH";
+title = "CHARGE RUSHHH";
 
 // The description, which is also displayed on the title screen
 description = `

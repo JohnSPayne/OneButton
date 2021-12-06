@@ -9,12 +9,12 @@ Destroy enemies.
 // The array of custom sprites
 characters = [
 `
+  gg
+c gg c
+ccllcc
+  ll 
   ll
-  ll
-ccllcc
-ccllcc
-ccllcc
-cc  cc
+ g  g
 `,`
 rr  rr
 rrrrrr
@@ -33,22 +33,22 @@ yyyyyy
 
 // Game design variable container
 const G = {
-	WIDTH: 100,
+	WIDTH: 150,
 	HEIGHT: 150,
 
     STAR_SPEED_MIN: 0.5,
 	STAR_SPEED_MAX: 1.0,
     
-    PLAYER_FIRE_RATE: 4,
+    PLAYER_FIRE_RATE: 25,
     PLAYER_GUN_OFFSET: 3,
 
     FBULLET_SPEED: 5,
 
-    ENEMY_MIN_BASE_SPEED: 1.0,
-    ENEMY_MAX_BASE_SPEED: 2.0,
+    ENEMY_MIN_BASE_SPEED: 0.5,
+    ENEMY_MAX_BASE_SPEED: 1.0,
     ENEMY_FIRE_RATE: 45,
 
-    EBULLET_SPEED: 2.0,
+    EBULLET_SPEED: 1.0,
     EBULLET_ROTATION_SPD: 0.1
 };
 
@@ -74,7 +74,7 @@ options = {
  */
 
 /**
- * @type { Star [] }
+ * @type { Star [] } - A decorative floating object in the background
  */
 let stars;
 
@@ -94,7 +94,7 @@ let player;
 /**
  * @typedef {{
  * pos: Vector
- * }} FBullet
+ * }} FBullet - The current position of the object
  */
 
 /**
@@ -133,7 +133,7 @@ let eBullets;
 let currentEnemySpeed;
 
 /**
- * @type { number }
+ * @type { number } - The downwards floating speed of this object
  */
 let waveCount;
 
@@ -187,8 +187,8 @@ function update() {
     stars.forEach((s) => {
         s.pos.y += s.speed;
         if (s.pos.y > G.HEIGHT) s.pos.y = 0;
-        color("light_black");
-        box(s.pos, 1);
+        color("blue");
+        box(s.pos, rnd(2,5));
     });
 
     // Updating and drawing the player
@@ -209,8 +209,8 @@ function update() {
         particle(
             player.pos.x + offset, // x coordinate
             player.pos.y, // y coordinate
-            4, // The number of particles
-            1, // The speed of the particles
+            6, // The number of particles
+            1.5, // The speed of the particles
             -PI/2, // The emitting angle
             PI/4  // The emitting width
         );

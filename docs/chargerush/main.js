@@ -1,27 +1,29 @@
 // The title of the game to be displayed on the title screen
-title = "CHARGE RUSHHH";
+title = "Space Bird";
 
 // The description, which is also displayed on the title screen
 description = `
-Destroy enemies.
+  Left Click to Jump
++ Hold to Jump Faster
+Avoid Green Obstacles
 `;
 
 // The array of custom sprites
 characters = [
 `
-  gg
-c gg c
-ccllcc
-  ll 
-  ll
- g  g
+  
+YYYY 
+ yyyy
+Yyyyly
+ yyyy
+ r  r 
 `,`
-rr  rr
-rrrrrr
-rrpprr
-rrrrrr
-  rr
-  rr
+ gggg
+gggggg
+gggggg
+gggggg
+gggggg
+ gggg
 `,`
 y  y
 yyyyyy
@@ -33,18 +35,21 @@ yyyyyy
 
 // Game design variable container
 const G = {
-	WIDTH: 150,
+	WIDTH: 200,
 	HEIGHT: 150,
 
-    STAR_SPEED_MIN: 0.5,
-	STAR_SPEED_MAX: 1.0,
+    STAR_SPEED_MIN: 0.1,
+	STAR_SPEED_MAX: 0.2,
+
+    STAR2_SPEED_MIN: 0.4,
+	STAR2_SPEED_MAX: 0.6,
     
     PLAYER_FIRE_RATE: 25,
     PLAYER_GUN_OFFSET: 3,
 
     FBULLET_SPEED: 5,
 
-    ENEMY_MIN_BASE_SPEED: 0.5,
+    ENEMY_MIN_BASE_SPEED: 0.7,
     ENEMY_MAX_BASE_SPEED: 1.0,
     ENEMY_FIRE_RATE: 45,
 
@@ -81,8 +86,21 @@ let stars;
 /**
  * @typedef {{
  * pos: Vector,
+ * speed: number
+ * }} Star2
+ */
+
+/**
+ * @type { Star [] } - A decorative floating object in the background
+ */
+let stars2;
+
+/**
+ * @typedef {{
+ * pos: Vector,
  * firingCooldown: number,
- * isFiringLeft: boolean
+ * isFiringLeft: boolean,
+ * playerSpeed: number
  * }} Player
  */
 
@@ -141,11 +159,13 @@ let waveCount;
  * 
  */
 
+ let addSpeed = 0;
+
 // The game loop function
 function update() {
     // The init function running at startup
 	if (!ticks) {
-		stars = times(20, () => {
+		stars = times(35, () => {
             const posX = rnd(0, G.WIDTH);
             const posY = rnd(0, G.HEIGHT);
             return {
@@ -154,10 +174,20 @@ function update() {
             };
         });
 
+        stars2 = times(10, () => {
+            const posX = rnd(0, G.WIDTH);
+            const posY = rnd(0, G.HEIGHT);
+            return {
+                pos: vec(posX, posY),
+                speed: rnd(G.STAR2_SPEED_MIN, G.STAR2_SPEED_MAX)
+            };
+        });
+
         player = {
-            pos: vec(G.WIDTH * 0.5, G.HEIGHT * 0.5),
+            pos: vec(G.WIDTH * 0.3, G.HEIGHT * 0.5),
             firingCooldown: G.PLAYER_FIRE_RATE,
-            isFiringLeft: true
+            isFiringLeft: true,
+            playerSpeed : 0.05
         };
 
         fBullets = [];
@@ -167,13 +197,15 @@ function update() {
         waveCount = 0;
 	}
 
+    addScore(1);
+
     // Spawning enemies
     if (enemies.length === 0) {
         currentEnemySpeed =
-            rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty;
-        for (let i = 0; i < 9; i++) {
-            const posX = rnd(0, G.WIDTH);
-            const posY = -rnd(i * G.HEIGHT * 0.1);
+            rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty * 1.2;
+        for (let i = 0; i < 15; i++) {
+            const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
+            const posY = rnd(0, G.HEIGHT);
             enemies.push({
                 pos: vec(posX, posY),
                 firingCooldown: G.ENEMY_FIRE_RATE 
@@ -185,16 +217,38 @@ function update() {
 
     // Update for Star
     stars.forEach((s) => {
-        s.pos.y += s.speed;
-        if (s.pos.y > G.HEIGHT) s.pos.y = 0;
+        s.pos.x -= s.speed;
+        if (s.pos.x < 0) s.pos.x = G.WIDTH;
         color("blue");
-        box(s.pos, rnd(2,5));
+        box(s.pos, 1);
+    });
+    stars2.forEach((s) => {
+        s.pos.x -= s.speed;
+        if (s.pos.x < 0) s.pos.x = G.WIDTH;
+        color("red");
+        box(s.pos, rnd(1.7, 2.5));
     });
 
     // Updating and drawing the player
-    player.pos = vec(input.pos.x, input.pos.y);
-    player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
-    player.firingCooldown--;
+    //player.pos = vec(input.pos.x, input.pos.y);
+    //player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
+    player.pos.y += player.playerSpeed;
+    player.playerSpeed += 0.06;
+    
+    if (player.pos.y > G.HEIGHT + 5 || player.pos.y < -5)
+    {
+        end();
+        play("powerUp");
+    }
+
+    if (input.isPressed)
+    {
+        addSpeed += 0.08;
+        player.pos.y -= addSpeed; 
+        player.playerSpeed = 0.05;
+    }
+    else addSpeed = 0;
+    /*player.firingCooldown--;
     if (player.firingCooldown <= 0) {
         const offset = (player.isFiringLeft)
             ? -G.PLAYER_GUN_OFFSET
@@ -214,7 +268,7 @@ function update() {
             -PI/2, // The emitting angle
             PI/4  // The emitting width
         );
-    }
+    }*/
     color ("black");
     char("a", player.pos);
 
@@ -226,8 +280,8 @@ function update() {
 
 
     remove(enemies, (e) => {
-        e.pos.y += currentEnemySpeed;
-        e.firingCooldown--;
+        e.pos.x -= currentEnemySpeed;
+        /*e.firingCooldown--;
         if (e.firingCooldown <= 0) {
             eBullets.push({
                 pos: vec(e.pos.x, e.pos.y),
@@ -236,7 +290,7 @@ function update() {
             });
             e.firingCooldown = G.ENEMY_FIRE_RATE;
             play("select");
-        }
+        }*/
 
         color("black");
         const isCollidingWithFBullets = char("b", e.pos).isColliding.rect.yellow;
@@ -253,7 +307,7 @@ function update() {
             addScore(10 * waveCount, e.pos);
         }
         
-        return (isCollidingWithFBullets || e.pos.y > G.HEIGHT);
+        return (isCollidingWithFBullets || e.pos.x < 0);
     });
 
     remove(fBullets, (fb) => {

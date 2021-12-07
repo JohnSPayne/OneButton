@@ -3,9 +3,11 @@ title = "Space Bird";
 
 // The description, which is also displayed on the title screen
 description = `
-  Left Click to Jump
-+ Hold to Jump Faster
-Avoid Green Obstacles
+ Left Click to Jump
+
++ Hold to Jump Higher
+
+ Avoid Green Obstacles
 `;
 
 // The array of custom sprites
@@ -42,7 +44,7 @@ const G = {
 	STAR_SPEED_MAX: 0.2,
 
     STAR2_SPEED_MIN: 0.4,
-	STAR2_SPEED_MAX: 0.6,
+	STAR2_SPEED_MAX: 0.7,
     
     PLAYER_FIRE_RATE: 25,
     PLAYER_GUN_OFFSET: 3,
@@ -91,7 +93,7 @@ let stars;
  */
 
 /**
- * @type { Star [] } - A decorative floating object in the background
+ * @type { Star2 [] } - A decorative floating object in the background
  */
 let stars2;
 
@@ -160,6 +162,7 @@ let waveCount;
  */
 
  let addSpeed = 0;
+ let jumpPlay = true;
 
 // The game loop function
 function update() {
@@ -174,7 +177,7 @@ function update() {
             };
         });
 
-        stars2 = times(10, () => {
+        stars2 = times(8, () => {
             const posX = rnd(0, G.WIDTH);
             const posY = rnd(0, G.HEIGHT);
             return {
@@ -226,7 +229,7 @@ function update() {
         s.pos.x -= s.speed;
         if (s.pos.x < 0) s.pos.x = G.WIDTH;
         color("red");
-        box(s.pos, rnd(1.7, 2.5));
+        box(s.pos, rnd(1.7, 2.7));
     });
 
     // Updating and drawing the player
@@ -238,16 +241,23 @@ function update() {
     if (player.pos.y > G.HEIGHT + 5 || player.pos.y < -5)
     {
         end();
-        play("powerUp");
+        play("laser");
     }
 
     if (input.isPressed)
     {
+        if (jumpPlay){
+            play("hit");
+        }
         addSpeed += 0.085;
         player.pos.y -= addSpeed; 
         player.playerSpeed = 0.05;
+        jumpPlay = false;
     }
-    else addSpeed = 0;
+    else {
+        addSpeed = 0;
+        jumpPlay = true;
+    }
     /*player.firingCooldown--;
     if (player.firingCooldown <= 0) {
         const offset = (player.isFiringLeft)
@@ -272,11 +282,11 @@ function update() {
     color ("black");
     char("a", player.pos);
 
-    fBullets.forEach((fb) => {
+    /*fBullets.forEach((fb) => {
         fb.pos.y -= G.FBULLET_SPEED;
         color("yellow");
         box(fb.pos, 2);
-    });
+    });*/
 
 
     remove(enemies, (e) => {
@@ -296,8 +306,8 @@ function update() {
         const isCollidingWithFBullets = char("b", e.pos).isColliding.rect.yellow;
         const isCollidingWithPlayer = char("b", e.pos).isColliding.char.a;
         if (isCollidingWithPlayer) {
+            play("laser");
             end();
-            play("powerUp");
         }
         
         if (isCollidingWithFBullets) {
@@ -310,7 +320,7 @@ function update() {
         return (isCollidingWithFBullets || e.pos.x < 0);
     });
 
-    remove(fBullets, (fb) => {
+    /*remove(fBullets, (fb) => {
         color("yellow");
         const isCollidingWithEnemies = box(fb.pos, 2).isColliding.char.b;
         return (isCollidingWithEnemies || fb.pos.y < 0);
@@ -333,5 +343,5 @@ function update() {
         if (isCollidingWithFBullets) addScore(1, eb.pos);
         
         return (!eb.pos.isInRect(0, 0, G.WIDTH, G.HEIGHT));
-    });
+    });*/
 }

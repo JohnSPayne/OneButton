@@ -19,10 +19,10 @@ Yyyyly
  r  r 
 `,`
  gggg
+glgggg
+glgggg
 gggggg
-gggggg
-gggggg
-gggggg
+glgggg
  gggg
 `,`
 y  y

@@ -22,7 +22,7 @@ Yyyyly
 glgggg
 glgggg
 gggggg
-glgggg
+gggggg
  gggg
 `,`
 y  y
@@ -202,7 +202,7 @@ function update() {
     // Spawning enemies
     if (enemies.length === 0) {
         currentEnemySpeed =
-            rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty * 1.2;
+            rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty * 1.1;
         for (let i = 0; i < 15; i++) {
             const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
             const posY = rnd(0, G.HEIGHT);
@@ -233,7 +233,7 @@ function update() {
     //player.pos = vec(input.pos.x, input.pos.y);
     //player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
     player.pos.y += player.playerSpeed;
-    player.playerSpeed += 0.06;
+    player.playerSpeed += 0.055;
     
     if (player.pos.y > G.HEIGHT + 5 || player.pos.y < -5)
     {
@@ -243,7 +243,7 @@ function update() {
 
     if (input.isPressed)
     {
-        addSpeed += 0.08;
+        addSpeed += 0.085;
         player.pos.y -= addSpeed; 
         player.playerSpeed = 0.05;
     }

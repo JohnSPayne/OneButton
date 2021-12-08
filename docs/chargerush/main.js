@@ -274,7 +274,7 @@ function update() {
         }
         addSpeed += 0.085;
         player.pos.y -= addSpeed; 
-        player.playerSpeed = 0.2;
+        player.playerSpeed = 0.1;
         jumpPlay = false;
     }
     else {

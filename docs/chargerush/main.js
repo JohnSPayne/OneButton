@@ -259,7 +259,7 @@ function update() {
     //player.pos = vec(input.pos.x, input.pos.y);
     //player.pos.clamp(0, G.WIDTH, 0, G.HEIGHT);
     player.pos.y += player.playerSpeed;
-    player.playerSpeed += 0.055;
+    player.playerSpeed += 0.04;
     
     if (player.pos.y > G.HEIGHT + 5 || player.pos.y < -5)
     {
@@ -274,7 +274,7 @@ function update() {
         }
         addSpeed += 0.085;
         player.pos.y -= addSpeed; 
-        player.playerSpeed = 0.05;
+        player.playerSpeed = 0.2;
         jumpPlay = false;
     }
     else {

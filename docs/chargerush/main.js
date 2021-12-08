@@ -205,15 +205,38 @@ function update() {
     // Spawning enemies
     if (enemies.length === 0) {
         currentEnemySpeed =
-            rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty * 1.1;
-        for (let i = 0; i < 15; i++) {
-            const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
-            const posY = rnd(0, G.HEIGHT);
-            enemies.push({
-                pos: vec(posX, posY),
-                firingCooldown: G.ENEMY_FIRE_RATE 
-            });
+            rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty;
+        if (waveCount < 5){
+            for (let i = 0; i < 5; i++) {
+                const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
+                const posY = rnd(0, G.HEIGHT);
+                enemies.push({
+                    pos: vec(posX, posY),
+                    firingCooldown: G.ENEMY_FIRE_RATE 
+                });
+            }
         }
+        else if (waveCount < 10){
+            for (let i = 0; i < 10; i++) {
+                const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
+                const posY = rnd(0, G.HEIGHT);
+                enemies.push({
+                    pos: vec(posX, posY),
+                    firingCooldown: G.ENEMY_FIRE_RATE 
+                });
+            }
+        }
+        else {
+            for (let i = 0; i < 15; i++) {
+                const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
+                const posY = rnd(0, G.HEIGHT);
+                enemies.push({
+                    pos: vec(posX, posY),
+                    firingCooldown: G.ENEMY_FIRE_RATE 
+                });
+            }
+        }
+        
 
         waveCount++; // Increase the tracking variable by one
     }

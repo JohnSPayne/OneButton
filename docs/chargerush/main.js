@@ -206,7 +206,7 @@ function update() {
     if (enemies.length === 0) {
         currentEnemySpeed =
             rnd(G.ENEMY_MIN_BASE_SPEED, G.ENEMY_MAX_BASE_SPEED) * difficulty;
-        if (waveCount < 5){
+        if (waveCount < 3){
             for (let i = 0; i < 5; i++) {
                 const posX = G.WIDTH//rnd(i * G.WIDTH * 0.1);
                 const posY = rnd(0, G.HEIGHT);
